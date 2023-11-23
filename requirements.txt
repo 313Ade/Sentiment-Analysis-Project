@@ -4,4 +4,3 @@ pandas==2.1.3
 streamlit==1.27.2
 tensorflow==2.14.0
 tensorflow_intel
-matplotlib==3.8.0
