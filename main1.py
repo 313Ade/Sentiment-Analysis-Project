@@ -22,7 +22,8 @@ model = tf.keras.models.load_model('bestmodel.h5')
 #tokenizing and stuff
 
 tokenizer = Tokenizer()
-with open(r'C:\Users\User\Desktop\SA\tokenizer.pkl', 'rb') as tokenizer_file:
+#with open(r'C:\Users\User\Desktop\SA\tokenizer.pkl', 'rb') as tokenizer_file:
+with open('tokenizer.pkl', 'rb') as tokenizer_file:
     loaded_tokenizer = pickle.load(tokenizer_file)
 
 # Defining regex patterns
