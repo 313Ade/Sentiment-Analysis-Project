@@ -15,7 +15,9 @@ warnings.filterwarnings('ignore')
 
 from tensorflow.keras.models import load_model
 
-model = tf.keras.models.load_model(r'bestModel\bestmodel.h5')
+#model = tf.keras.models.load_model(r'bestModel\bestmodel.h5')
+model = tf.keras.models.load_model('bestmodel.h5')
+#model = tf.keras.models.load_model(https://github.com/313Ade/Sentiment-Analysis-Project/blob/main/bestModel/bestmodel.h5)
 
 #tokenizing and stuff
 
