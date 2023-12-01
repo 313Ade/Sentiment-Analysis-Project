@@ -16,12 +16,13 @@ warnings.filterwarnings('ignore')
 from tensorflow.keras.models import load_model
 
 #model = tf.keras.models.load_model(r'bestModel\bestmodel.h5') #for local development
-model = tf.keras.models.load_model('https://github.com/313Ade/Sentiment-Analysis-Project/blob/main/bestmodel.h5') #for deployments
+model = tf.keras.models.load_model('bestmodel.h5') #for deployments
 
 #tokenizing and stuff
 
 tokenizer = Tokenizer()
-with open(r'C:\Users\User\Desktop\SA\tokenizer.pkl', 'rb') as tokenizer_file:
+#with open(r'C:\Users\User\Desktop\SA\tokenizer.pkl', 'rb') as tokenizer_file: #for local development
+with open('tokenizer.pkl', 'rb') as tokenizer_file: #for deployment
     loaded_tokenizer = pickle.load(tokenizer_file)
 
 # Defining regex patterns
