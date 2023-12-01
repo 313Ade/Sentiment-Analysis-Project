@@ -222,14 +222,11 @@ if df is not None:
     file_name = f'{file_name}_processed.csv'
 
     # Display the download button
-    if st.download_button(
+    st.download_button(
         label='Download processed data',
         data=df.to_csv().encode("utf-8"),
         file_name=file_name,
         mime='text/csv'
-    ):
-        st.stop
-    
-
+    )
 
 
