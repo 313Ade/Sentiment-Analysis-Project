@@ -15,15 +15,12 @@ warnings.filterwarnings('ignore')
 
 from tensorflow.keras.models import load_model
 
-#model = tf.keras.models.load_model(r'bestModel\bestmodel.h5')
-model = tf.keras.models.load_model('bestmodel.h5')
-#model = tf.keras.models.load_model(https://github.com/313Ade/Sentiment-Analysis-Project/blob/main/bestModel/bestmodel.h5)
+model = tf.keras.models.load_model(r'bestModel\bestmodel.h5')
 
 #tokenizing and stuff
 
 tokenizer = Tokenizer()
-#with open(r'C:\Users\User\Desktop\SA\tokenizer.pkl', 'rb') as tokenizer_file:
-with open('tokenizer.pkl', 'rb') as tokenizer_file:
+with open(r'C:\Users\User\Desktop\SA\tokenizer.pkl', 'rb') as tokenizer_file:
     loaded_tokenizer = pickle.load(tokenizer_file)
 
 # Defining regex patterns
@@ -81,13 +78,14 @@ def predict_sentiment(text):
     prediction = model.predict(preprocessed_text)
     return prediction
 
-#def analyze(x):
-    if x>= 0.3:
+def analyze(text):
+    if text >= 0.5:
         return 'Positive'
-    elif x <= -0.3:
+    elif text <= 0.3:
         return 'Negative'
     else:
         return 'Neutral'
+
 
 
 ## Streamlit starts here ##
@@ -97,7 +95,7 @@ st.title('Senty!')
 tab1, tab2 = st.tabs(["Welcome", "Instructions"])
 
 with tab1:
-    tab1.write("Welcome to my Sentiment Analysis webapp powered by Streamlit! Please read the instructions.")
+    tab1.subheader("Welcome! Go through the instructions or analyze a paragraph.")
 
 
 with tab2:
@@ -117,95 +115,89 @@ with tab2:
     )
 
 
-# with st.expander('Analyze CSV'):
-upl = st.file_uploader('Upload CSV file')    
+def get_save():
+    st.session_state.text =''
 
-def analyze(text):
-    if text >= 0.5:
-        return 'Positive'
-    elif text <= 0.3:
-        return 'Negative'
-    else:
-        return 'Neutral'
+with st.expander('Analyze text'):
+    text = st.text_area(label='Your text', key='text')
+    if st.button('Analyze sentiment'):
+        
+        if text:
+            text = preprocess_apply(text)
+            text = predict_sentiment(text)
+
+            sentiment = analyze(text)
+            sentiment_result = analyze(text)
+            #st.write(f"The sentiment is {sentiment}!")
+            #st.write(f'<span style="color:{style_sentiment(sentiment_result)}">{sentiment_result}</span>', unsafe_allow_html=True)
+            if sentiment_result == 'Negative':
+                st.write(f'The text has a :red[{sentiment}] sentiment.')
+            elif sentiment_result == 'Positive':
+                st.write(f'The text has a :green[{sentiment}] sentiment.')
+            else:
+                st.write(f'The text is just :grey[{sentiment}].')
+            #st.markdown(f'<div style="padding: 10px; border-radius: 5px; {style_sentiment(sentiment_result)}">{sentiment_result}</div>', unsafe_allow_html=True)
+        else:
+            st.warning("Please enter some text to analyze.")
+
+
+    st.button('Clear', on_click=get_save) #clear text input
+        
+
+with st.expander('Analyze CSV'):
+      
+    upl = st.file_uploader('Upload CSV file')   
+
         
 df = None
 
-if st.button("Analyze data"):
+with st.spinner():
 
-    with st.spinner():
-
-        if upl:
-            df = pd.read_csv(upl)
-            #df['Processed_Text'] = df.iloc[:,0].apply(preprocess_apply)
-            #input_data = np.array([processed_text]) 
-            #input_data = np.array(df['Processed_Text']) #tuple index out of range >>#this is probably the wrong error
-            
-            #sentiment = model.predict(input_data)
-            #prediction = predict_sentiment(input_data) 
-            #input 0 of LSTM layer is incompatible with the layer, expected ndim3 but found ndim2 
-
-            #df['Analysis'] = df['Reviews'].apply(preprocess_apply) #cant rememeber why I did this
-
-            df['Sentiment'] = np.nan
-                
+    if upl:
+        df = pd.read_csv(upl, encoding='unicode_escape')
         
-            df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
-            df['Value'] = df['Processed'].apply(predict_sentiment)
+        df['Sentiment'] = np.nan
             
-            df['Value'] = df['Value'].apply(lambda x: x[0] if isinstance(x, np.ndarray) else x)
-            df['Sentiment'] = df['Value'].apply(analyze)
-            #.apply(lambda x: x[0] if isinstance(x, np.ndarray) else x)
-
-            #df['Processed'] = df['Processed'].apply(lambda x: [round(x[0], 2)] if isinstance(x, np.ndarray) else x)
-                
-            #df['Processed Text'] = df.iloc[:,0].apply(predict_sentiment)
-
-            
-            #st.write(input.shape)
-            #input = input.reshape(6,100) #tried to reshape the array
-            #sentiment = model.predict(input) 
-
-
-            ### TextBlob ###
-
-            #df['Processed_Text'] = df.iloc[:,0].apply(preprocess_apply)
-            #df['Score'] = df['Processed_Text'].apply(score)
-            #df['Analysis'] = df['Score'].apply(analyze)
-
-            ###---###           
-
-            st.markdown("""---""")
-            st.subheader('Sample')
-            
-            # Display the updated DataFrame with sentiment predictions
-            st.write('**Random sample of 10 rows with their sentiment predictions:**')
-            
-            st.write(df.sample(10))
+    
+        df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
+        df['Value'] = df['Processed'].apply(predict_sentiment)
         
-        
-            st.title('Dataset Summary')
-            
-            avg_sentiment = np.mean(df['Value'])
-            
-            count = df['Sentiment'].value_counts()
-            
-            st.write(f'Average Sentiment Score: {avg_sentiment[0]:.2f}')
-            st.write(count)
-            
-            st.markdown("""---""")
-        
-            
-            width = 5
-            height = 5
-            fig,ax = plt.subplots(figsize=(width,height), facecolor='none')
-            ax.pie(count,labels=count.index,autopct='%1.1f%%',colors=['red', 'green', 'grey'])
-            plt.title('Percentage of Sentiments')
-            plt.style.use('dark_background')
-            st.pyplot(fig)
-            ### ###
+        df['Value'] = df['Value'].apply(lambda x: x[0] if isinstance(x, np.ndarray) else x)
+        df['Sentiment'] = df['Value'].apply(analyze)
+                       
 
-        # else:
-        #     st.write("Please upload a file")
+        st.markdown("""---""")
+        st.subheader('Sample')
+        
+        # Display the updated DataFrame with sentiment predictions
+        st.write('**Random sample of 10 rows with their sentiment predictions:**')
+        
+        st.write(df.sample(10))
+    
+    
+        st.title('Dataset Summary')
+        
+        avg_sentiment = np.mean(df['Value'])
+        
+        count = df['Sentiment'].value_counts()
+        
+        st.write(f'Average Sentiment Score: {avg_sentiment[0]:.2f}')
+        st.write(count)
+        
+        st.markdown("""---""")
+    
+        
+        width = 5
+        height = 5
+        fig,ax = plt.subplots(figsize=(width,height), facecolor='none')
+        ax.pie(count,labels=count.index,autopct='%1.1f%%',colors=['red', 'green', 'grey'])
+        plt.title('Percentage of Sentiments')
+        plt.style.use('dark_background')
+        st.pyplot(fig)
+        ### ###
+
+    # else:
+    #     st.write("Please upload a file")
 
 
 
