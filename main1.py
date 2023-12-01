@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')
 from tensorflow.keras.models import load_model
 
 #model = tf.keras.models.load_model(r'bestModel\bestmodel.h5') #for local development
-model = tf.keras.models.load_model('bestmodel.h5') #for deployments
+model = tf.keras.models.load_model('bestmodel.h5') #for deployment
 
 #tokenizing and stuff
 
@@ -107,6 +107,7 @@ with tab2:
             <h3> How To Use </h3>
         </div>
         <div style="text-align:left; padding:0px;">
+        <li> Make sure your file is a CSV file, and not an Excel Workbook file. </li>
         <li> Prepare your CSV file. Ensure the first column contains your desired text. <span><a href= https://support.microsoft.com/en-us/office/rearrange-the-order-of-columns-in-a-table-d1701654-fe43-4ae3-adbc-29ee03a97054 target='_blank'> How? </a></span></li>
         <li> Upload your CSV file using the Analyze CSV dropdown </li>
         <li> After a few seconds, your processed dataset should be ready for download</li>
@@ -226,10 +227,7 @@ if df is not None:
         data=df.to_csv().encode("utf-8"),
         file_name=file_name,
         mime='text/csv'
-    ):
-        print("here")
-        st.stop()
-st.stop()
+    )
                 
 
 
