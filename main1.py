@@ -154,6 +154,16 @@ with st.expander('Analyze CSV'):
 
         
 df = None
+@st.cache_data
+def load_data(upl):
+    df = pd.read_csv(upl, encoding='unicode_escape')
+    df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
+    df['Value'] = df['Processed'].apply(predict_sentiment)
+    df['Value'] = df['Value'].apply(lambda x: x[0] if isinstance(x, np.ndarray) else x)
+    df['Sentiment'] = df['Value'].apply(analyze)
+    return df
+df = load_data(upl)
+st.stop()
 
 with st.spinner():
 
