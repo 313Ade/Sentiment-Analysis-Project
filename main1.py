@@ -154,7 +154,7 @@ with st.expander('Analyze CSV'):
 
         
 df = None
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data(upl):
     df = pd.read_csv(upl, encoding='unicode_escape')
     df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
