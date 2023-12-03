@@ -159,15 +159,22 @@ with st.spinner():
     if upl:
         df = pd.read_csv(upl, encoding='unicode_escape')
         
-        df['Sentiment'] = np.nan
-            
-    
-        df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
-        df['Value'] = df['Processed'].apply(predict_sentiment)
+        #df['Sentiment'] = np.nan
+        progress_text1 = 'Please wait...'
+        progress_text2 = 'Done!'
+        progress_bar = st.progress(0, text=progress1)
         
+        df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
+        progress_bar.progress(33,progress_text1)
+        
+        df['Value'] = df['Processed'].apply(predict_sentiment)        
         df['Value'] = df['Value'].apply(lambda x: x[0] if isinstance(x, np.ndarray) else x)
+        
         df['Sentiment'] = df['Value'].apply(analyze)
-                       
+        progress_bar.progress(100,progress_text2)
+
+        time.sleep(1)
+        progress_bar.empty()
 
         st.markdown("""---""")
         st.subheader('Sample')
