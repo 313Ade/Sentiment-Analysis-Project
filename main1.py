@@ -163,6 +163,24 @@ def load_data(upl):
     df['Sentiment'] = df['Value'].apply(analyze)
     return df
 df = load_data(upl)
+st.markdown("""---""")
+st.subheader('Sample')
+
+# Display the updated DataFrame with sentiment predictions
+st.write('**Random sample of 10 rows with their sentiment predictions:**')
+
+st.write(df.sample(10))
+
+df = df.to_csv().encode('utf-8')
+
+st.download_button(
+    label='Download processed data',
+    # data=df.to_csv().encode("utf-8"),
+    data=df,
+    #file_name=file_name,
+    mime='text/csv',
+    key='download_button',
+)
 st.stop()
 
 with st.spinner():
