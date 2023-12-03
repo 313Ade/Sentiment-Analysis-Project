@@ -162,7 +162,7 @@ with st.spinner():
         #df['Sentiment'] = np.nan
         progress_text1 = 'Please wait...'
         progress_text2 = 'Done!'
-        progress_bar = st.progress(0, text=progress1)
+        progress_bar = st.progress(0, text=progress_text1)
         
         df['Processed'] = df.iloc[:,0].apply(preprocess_apply)
         progress_bar.progress(33,progress_text1)
