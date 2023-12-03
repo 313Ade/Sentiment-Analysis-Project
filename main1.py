@@ -202,7 +202,7 @@ with st.spinner():
         
         count = df['Sentiment'].value_counts()
         
-        st.write(f'Average Sentiment Score: {avg_sentiment[0]:.2f}')
+        st.write(f'Averagessss Sentiment Score: {avg_sentiment[0]:.2f}')
         st.write(count)
         
         st.markdown("""---""")
