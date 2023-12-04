@@ -207,7 +207,17 @@ if upl is not None:
         mime='text/csv',
         key='download_button',
     )
-    st.stop()
+
+st.markdown(
+    """
+    <div style="text-align: center; padding: 10px;">
+        Developed as a final year project by <a href="https://github.com/313Ade/Sentiment-Analysis-Project/tree/main" target="_blank">Jerry Ade</a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.stop()
 
 ### Old Code ###
 ### Use for Reference Purposes ###
