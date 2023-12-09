@@ -7,5 +7,5 @@
 * I don't know how similar apps compare in speed but I think it can be faster. <br>
 * Also it is about 215 lines long, there's an st.stop around there. Anything after that can be considered legacy code. Use it for references <br>
 * Finally, I haven't handled error handling. I don't know how the app would react when a user uploads a non-CSV file.
-
+* I am done with my presentation now, so I am going to forget about this project until god knows when. Goodbye!
 
